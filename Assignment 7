@@ -1,0 +1,1119 @@
+// Assignment 6: add a class after the page finishes loading.
+window.addEventListener("load", function () {
+  document.body.classList.add("page-loaded");
+});
+
+// Assignment 6 / 7: skills are stored in an array and generated on the About Me page.
+const skills = [
+  "IT Support and Troubleshooting",
+  "Microsoft Active Directory",
+  "Networking and Systems Administration",
+  "Python Programming",
+  "SQL and Database Management",
+  "HTML and CSS",
+  "Cybersecurity Fundamentals"
+];
+
+const list = document.querySelector("#list");
+if (list) {
+  skills.forEach(function (skill) {
+    const li = document.createElement("li");
+    li.textContent = skill;
+    list.appendChild(li);
+  });
+
+  const count = document.getElementById("count");
+  if (count) {
+    count.textContent = "I have " + skills.length + " skills and areas of experience listed.";
+  }
+}
+
+// Assignment 7: dark-mode button uses addEventListener and classList.toggle.
+const themeToggle = document.querySelector("#theme-toggle");
+if (themeToggle) {
+  themeToggle.addEventListener("click", function () {
+    const darkModeEnabled = document.body.classList.toggle("dark-mode");
+    themeToggle.setAttribute("aria-pressed", String(darkModeEnabled));
+    themeToggle.textContent = darkModeEnabled ? "Turn off dark mode" : "Toggle dark mode";
+  });
+}
+
+// Assignment 7: client-side contact form validation.
+const contactForm = document.querySelector("#contact-form");
+if (contactForm) {
+  contactForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const nameField = document.querySelector("#contact-name");
+    const emailField = document.querySelector("#contact-email");
+    const messageField = document.querySelector("#contact-message");
+    const nameMessage = document.querySelector("#name-message");
+    const emailMessage = document.querySelector("#email-message");
+    const messageFeedback = document.querySelector("#message-feedback");
+    const formResult = document.querySelector("#form-result");
+
+    nameMessage.textContent = "";
+    emailMessage.textContent = "";
+    messageFeedback.textContent = "";
+    formResult.textContent = "";
+
+    let valid = true;
+
+    if (!nameField.value.trim()) {
+      nameMessage.textContent = "Please enter your name.";
+      valid = false;
+    }
+
+    if (!emailField.value.trim()) {
+      emailMessage.textContent = "Please enter your email address.";
+      valid = false;
+    } else if (!emailField.validity.valid) {
+      emailMessage.textContent = "Please enter a valid email address.";
+      valid = false;
+    }
+
+    // Custom rule: the message must contain at least 20 characters.
+    if (messageField.value.trim().length < 20) {
+      messageFeedback.textContent = "Your message must be at least 20 characters long.";
+      valid = false;
+    }
+
+    if (valid) {
+      formResult.textContent = "Thank you! Your form passed validation. This demo does not send the message.";
+      contactForm.reset();
+    }
+  });
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --maroon: #501016;
+  --maroon-deep: #27070d;
+  --maroon-mid: #701b29;
+  --gold: #c6a15a;
+  --gold-light: #e0c58a;
+  --cream: #fff8ed;
+  --ink: #fffaf4;
+  --muted: #e0d0c4;
+  --panel: rgba(74, 34, 34, 0.68);
+  --line: rgba(226, 199, 151, 0.38);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--maroon-deep);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+a { color: inherit; text-decoration: none; }
+
+img, iframe { max-width: 100%; }
+
+.container {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* Deep maroon and muted-gold concentric bands create the animated background. */
+.background-art {
+  position: fixed;
+  inset: -35vmax;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center,
+      #26060c 0 14%,
+      #4f1019 14.2% 22%,
+      #26060c 22.2% 27%,
+      #8b6639 27.2% 28.5%,
+      #58131e 28.7% 38%,
+      #26060c 38.2% 44%,
+      #681a27 44.2% 54%,
+      #a17b47 54.2% 55.8%,
+      #4d1019 56% 66%,
+      #26060c 66.2% 73%,
+      #641824 73.2% 84%,
+      #98703f 84.2% 85.5%,
+      #30070f 85.7% 100%);
+  transform-origin: center;
+  animation: ring-drift 34s ease-in-out infinite alternate;
+}
+
+.background-art::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(
+    115deg,
+    rgba(20, 2, 6, 0.10),
+    transparent 48%,
+    rgba(205, 163, 92, 0.05)
+  );
+}
+
+@keyframes ring-drift {
+  from { transform: rotate(-7deg) scale(0.94); }
+  to { transform: rotate(7deg) scale(1.06); }
+}
+
+/* Frosted navigation bar. */
+.site-header {
+  position: relative;
+  z-index: 2;
+  padding-top: 14px;
+}
+
+.nav-bar {
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 8px 24px;
+  border: 1px solid rgba(226, 199, 151, 0.34);
+  border-radius: 17px;
+  background: rgba(35, 8, 12, 0.7);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(16px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cream);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.brand-mark {
+  color: var(--gold-light);
+  font-size: 1.45rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links a {
+  padding: 8px 18px;
+  border-radius: 999px;
+  color: #f7eee5;
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.nav-links a:hover {
+  color: white;
+  background: rgba(198, 161, 90, 0.18);
+  transform: translateY(-2px);
+}
+
+.nav-links a.active {
+  color: #2c1010;
+  background: linear-gradient(135deg, #e1c58b, #b78a48);
+}
+
+/* Home hero and circular university logo. */
+.home-main { padding-bottom: 26px; }
+
+.hero {
+  display: flex;
+  min-height: 535px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 46px 0 18px;
+  text-align: center;
+}
+
+.hero-logo-wrap {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  margin: -3px 0 2px;
+}
+
+.logo-ring {
+  display: grid;
+  width: clamp(210px, 27vw, 290px);
+  aspect-ratio: 1;
+  place-items: center;
+  overflow: hidden;
+  border: 3px solid var(--gold-light);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(75, 12, 20, 0.98), rgba(39, 5, 11, 0.98));
+  box-shadow:
+    0 0 0 9px rgba(203, 166, 99, 0.12),
+    0 0 42px rgba(220, 177, 104, 0.28),
+    inset 0 0 32px rgba(0,0,0,0.35);
+}
+
+.txst-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+.hero-headshot {
+  border: 5px solid rgba(224, 197, 138, 0.22);
+}
+
+.bobcat-mark {
+  display: block;
+  width: 34px;
+  height: 37px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.28));
+}
+
+.hero-copy {
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  padding-top: 7px;
+}
+
+.hero h1 {
+  margin: 0;
+  color: #fffaf4;
+  font-size: clamp(2.6rem, 6vw, 4.1rem);
+  font-weight: 850;
+  letter-spacing: -0.055em;
+  line-height: 1.12;
+  text-shadow: 0 5px 24px rgba(0,0,0,0.25);
+}
+
+#intro {
+  max-width: 690px;
+  margin: 10px auto 0;
+  color: #f3e5d6;
+  font-size: clamp(1rem, 2vw, 1.12rem);
+}
+
+.bobcat-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 22px auto 0;
+  color: var(--gold);
+}
+
+.bobcat-divider span {
+  width: 82px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.bobcat-divider span:last-child {
+  transform: rotate(180deg);
+}
+
+.bobcat-divider b {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+/* Content panels remain translucent so the moving rings are visible but text stays readable. */
+.section-block { padding: 8px 0 30px; }
+
+.section-heading {
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+  color: var(--gold-light);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.17em;
+}
+
+.section-heading h2,
+.page-intro h1 {
+  margin: 0;
+  color: #fffaf4;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.card {
+  min-width: 0;
+  padding: 22px 24px 24px;
+  border: 1px solid var(--line);
+  border-radius: 19px;
+  background: linear-gradient(145deg, rgba(255, 241, 220, 0.14), rgba(71, 27, 29, 0.62));
+  box-shadow: 0 16px 36px rgba(0,0,0,0.13), inset 0 1px 0 rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(231, 198, 135, 0.75);
+  background: linear-gradient(145deg, rgba(255, 241, 220, 0.2), rgba(71, 27, 29, 0.76));
+}
+
+.card-icon {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--gold-light);
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.card h3,
+.project-card h2 {
+  margin: 5px 0 7px;
+  color: #fffaf4;
+  font-size: 1.13rem;
+  font-weight: 800;
+}
+
+.card p {
+  margin: 0;
+  color: #eadbd0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.home-bottom {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  gap: 48px;
+  padding: 8px 0 36px;
+}
+
+.home-bottom .section-heading {
+  text-align: left;
+}
+
+.home-bottom .section-heading h2 { font-size: 1.8rem; }
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(35, 8, 12, 0.42);
+  color: #fff7ed;
+  font-size: 0.84rem;
+}
+
+th, td {
+  padding: 8px 13px;
+  border-bottom: 1px solid rgba(226, 199, 151, 0.2);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+th {
+  background: rgba(190, 145, 77, 0.42);
+  color: #fff8ec;
+}
+
+tr:last-child td { border-bottom: 0; }
+
+.reference-link {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin-bottom: 11px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 241, 220, 0.1);
+  color: #fff8ef;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.reference-link:hover {
+  transform: translateX(4px);
+  background: rgba(255, 241, 220, 0.18);
+}
+
+.reference-icon { color: var(--gold-light); font-size: 1.55rem; }
+.external-mark { margin-left: auto; color: var(--gold-light); }
+
+/* Interior pages */
+.page-main { min-height: 72vh; padding-top: 86px; padding-bottom: 76px; }
+
+.page-intro {
+  max-width: 760px;
+  margin: 0 auto 42px;
+  text-align: center;
+}
+
+.page-intro h1 {
+  font-size: clamp(2.8rem, 7vw, 4.8rem);
+}
+
+.page-intro > p:last-child {
+  margin: 15px auto 0;
+  color: #eadbd0;
+  font-size: 1.05rem;
+}
+
+.gold-period { color: var(--gold-light); }
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.project-card { min-height: 250px; }
+.project-card .card-kicker {
+  margin: 15px 0 5px;
+  color: var(--gold-light);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+.project-card p:last-child { margin-top: 8px; }
+
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.65fr) 1.35fr;
+  align-items: center;
+  gap: 48px;
+  max-width: 900px;
+  margin: 0 auto 65px;
+}
+
+.about-image-wrap {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 241, 220, 0.12);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+}
+
+.about-photo {
+  display: block;
+  width: 100%;
+  border: 2px solid rgba(226, 199, 151, 0.55);
+  border-radius: 13px;
+}
+
+.about-copy { color: #eadbd0; }
+.about-copy .lead-copy {
+  margin-top: 0;
+  color: #fffaf4;
+  font-size: 1.4rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.skills-panel,
+.about-note,
+.contact-form {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(48, 13, 19, 0.68);
+  box-shadow: 0 16px 38px rgba(0,0,0,0.16);
+  backdrop-filter: blur(12px);
+}
+
+.skills-panel { padding: 20px 26px; }
+
+#list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#list li {
+  position: relative;
+  padding-left: 20px;
+  color: #f5e9dd;
+}
+
+#list li::before {
+  position: absolute;
+  top: 0.7em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  content: "";
+  background: var(--gold-light);
+}
+
+#count {
+  margin: 18px 0 0;
+  color: var(--gold-light);
+  font-size: 0.85rem;
+  font-weight: 750;
+}
+
+.about-note {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-top: 28px;
+  padding: 24px;
+}
+
+.about-note h2 {
+  margin: 0 0 8px;
+  color: #fffaf4;
+}
+
+.about-note p:last-child { margin-bottom: 0; color: #eadbd0; }
+
+.contact-main { max-width: 900px; }
+
+.contact-form {
+  overflow: hidden;
+  padding: 10px;
+  background: rgba(255, 250, 244, 0.96);
+}
+
+.contact-form iframe {
+  display: block;
+  width: 100%;
+  min-height: 960px;
+  border: 0;
+  border-radius: 10px;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid rgba(226, 199, 151, 0.18);
+  background: rgba(25, 4, 9, 0.34);
+}
+
+.footer-inner {
+  display: flex;
+  min-height: 78px;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+}
+
+.footer-inner p {
+  margin: 0;
+  color: #f0e2d6;
+  font-size: 0.8rem;
+}
+
+.footer-rule {
+  width: min(18vw, 180px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* Page-load entrance animation, activated by script.js. */
+.motion-item {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.page-loaded .motion-item {
+  animation: rise-in 700ms cubic-bezier(0.2, 0.75, 0.25, 1) forwards;
+}
+
+.page-loaded .motion-item:nth-child(2) { animation-delay: 100ms; }
+.page-loaded .motion-item:nth-child(3) { animation-delay: 190ms; }
+.page-loaded .motion-item:nth-child(4) { animation-delay: 280ms; }
+.page-loaded .motion-item:nth-child(5) { animation-delay: 370ms; }
+.page-loaded .motion-item:nth-child(6) { animation-delay: 460ms; }
+
+@keyframes rise-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .motion-item { opacity: 1; transform: none; }
+}
+
+@media (max-width: 760px) {
+  .container { width: min(100% - 32px, 620px); }
+  .nav-bar { align-items: flex-start; flex-direction: column; padding: 12px 16px; }
+  .nav-links { width: 100%; justify-content: space-between; gap: 4px; }
+  .nav-links a { padding: 7px 10px; font-size: 0.8rem; }
+  .hero { min-height: 0; padding-top: 54px; padding-bottom: 40px; }
+  .hero-badges { justify-content: center; padding: 0; }
+  .purpose-note { position: static; margin-bottom: 12px; }
+  .hero-logo-wrap { margin: 10px 0 12px; }
+  .logo-ring { width: 220px; }
+  .cards, .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-bottom { grid-template-columns: 1fr; gap: 28px; }
+  .about-layout { grid-template-columns: 1fr; gap: 25px; }
+  .about-image-wrap { width: min(270px, 100%); margin: 0 auto; }
+}
+
+@media (max-width: 520px) {
+  .container { width: calc(100% - 28px); }
+  .brand { font-size: 1rem; }
+  .nav-links a { padding: 7px 6px; font-size: 0.72rem; }
+  .floating-note { padding: 10px 15px; font-size: 0.78rem; }
+  .logo-ring { width: 195px; }
+  .hero h1 { font-size: 2.65rem; }
+  .cards, .gallery { grid-template-columns: 1fr; }
+  .card { padding: 21px; }
+  .home-bottom { gap: 24px; }
+  th, td { padding: 7px 8px; font-size: 0.76rem; }
+  #list { grid-template-columns: 1fr; }
+  .about-note { flex-direction: column; }
+  .footer-inner { gap: 14px; }
+  .footer-rule { width: 14vw; }
+}
+
+
+/* Assignment 7 additions */
+.brand-bobcat {
+  display: block;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, .28));
+}
+.brand { gap: 11px; }
+.nav-bar { flex-wrap: wrap; }
+.theme-toggle, .submit-button {
+  border: 1px solid var(--gold-light);
+  border-radius: 999px;
+  padding: 9px 15px;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: #2c1010;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+.theme-toggle:hover, .submit-button:hover { transform: translateY(-2px); filter: brightness(1.06); }
+.theme-toggle:focus-visible, .submit-button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--gold-light);
+  outline-offset: 3px;
+}
+.logo-ring { position: relative; }
+.txst-medallion {
+  position: absolute;
+  right: -13px;
+  bottom: 13px;
+  z-index: 2;
+  width: clamp(58px, 7vw, 76px);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 3px solid var(--gold-light);
+  border-radius: 50%;
+  box-shadow: 0 5px 18px rgba(0,0,0,.4), 0 0 0 5px rgba(203,166,99,.14);
+}
+.project-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  margin: -2px 0 17px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+}
+.project-card { display: flex; flex-direction: column; }
+.project-card p:not(.card-kicker) { flex: 1; }
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  color: var(--gold-light);
+  font-weight: 800;
+}
+.project-link:hover { color: var(--cream); }
+.contact-native {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 28px;
+  background: rgba(48, 13, 19, .84);
+  color: var(--ink);
+}
+.form-field { margin-bottom: 18px; }
+.form-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--cream);
+  font-weight: 750;
+}
+.form-field input, .form-field textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(226,199,151,.65);
+  border-radius: 10px;
+  background: #fffaf4;
+  color: #251014;
+  font: inherit;
+}
+.form-field textarea { resize: vertical; }
+.field-hint, .field-message, .form-result, .form-disclaimer {
+  margin: 6px 0 0;
+  font-size: .84rem;
+}
+.field-hint { color: #e0d0c4; }
+.field-message { min-height: 1.2em; color: #ffd08a; }
+.form-result { color: #f4d99f; font-weight: 800; }
+.form-disclaimer { color: #e0d0c4; }
+.submit-button { margin-top: 5px; padding: 12px 22px; }
+
+/* The optional dark theme remains readable and keeps the TXST accent colors. */
+body.dark-mode {
+  --ink: #f7f1ea;
+  --muted: #d8c9bf;
+  --panel: rgba(12, 7, 10, .9);
+  background: #090609;
+  color: var(--ink);
+}
+body.dark-mode .background-art { filter: brightness(.48) saturate(.78); }
+body.dark-mode .nav-bar,
+body.dark-mode .card,
+body.dark-mode .skills-panel,
+body.dark-mode .about-note,
+body.dark-mode .contact-native,
+body.dark-mode table {
+  background-color: rgba(12, 7, 10, .94);
+}
+body.dark-mode .card p,
+body.dark-mode .about-copy,
+body.dark-mode .page-intro > p:last-child { color: #f0e4dc; }
+
+@media (min-width: 1280px) {
+  .cards, .gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .nav-bar { align-items: center; }
+  .theme-toggle { align-self: flex-end; }
+}
+@media (max-width: 520px) {
+  .brand-bobcat { width: 31px; height: 31px; }
+  .txst-medallion { right: -5px; bottom: 9px; width: 57px; }
+  .contact-native { padding: 20px 16px; }
+}
+@media (max-width: 390px) {
+  .container { width: calc(100% - 24px); }
+  .nav-links { flex-wrap: wrap; }
+  .nav-links a { padding: 7px 6px; }
+  .theme-toggle { width: 100%; }
+  .hero h1 { overflow-wrap: anywhere; }
+  .cards, .gallery { grid-template-columns: 1fr; }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Me | Anthony Ramos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="background-art" aria-hidden="true"></div>
+  <header class="site-header">
+    <nav class="container nav-bar" aria-label="Main navigation">
+      <a class="brand" href="index.html"><img class="brand-bobcat" src="images/TXST_Bobcat_logo.png" alt=""> Anthony Ramos</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a><a href="project.html">Projects</a>
+        <a href="contact.html">Contact</a><a class="active" href="about-me.html">About Me</a>
+      </div>
+      <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false">Toggle dark mode</button>
+    </nav>
+  </header>
+  <main class="container page-main">
+    <section class="page-intro motion-item">
+      <p class="eyebrow">THE PERSON BEHIND THE WORK</p>
+      <h1>About Me</h1>
+    </section>
+    <section class="about-layout">
+      <div class="about-image-wrap motion-item">
+        <img class="about-photo" src="images/anthony-headshot.jpeg" alt="Professional headshot of Anthony Ramos">
+      </div>
+      <div class="about-copy motion-item">
+        <p class="lead-copy">I'm Anthony Ramos, a Computer Information Systems student at Texas State University and a U.S. Army veteran.</p>
+        <p>My background includes information technology support, systems administration, team training, and working with enterprise IT systems. I enjoy learning how technology can solve practical problems and make organizations more effective.</p>
+        <p>As I continue my education, I'm building on my experience through coursework and hands-on projects in programming, databases, networking, and cybersecurity.</p>
+      </div>
+    </section>
+    <section class="section-block">
+      <div class="section-heading motion-item"><p class="eyebrow">TECHNICAL FOUNDATION</p><h2>My Technical Skills and Areas of Experience</h2></div>
+      <div class="skills-panel motion-item">
+        <ul id="list"></ul>
+        <p id="count"></p>
+      </div>
+    </section>
+    <section class="about-note motion-item">
+      <span class="card-icon">✦</span>
+      <div><p class="eyebrow">OUTSIDE THE CLASSROOM</p><h2>A Little More About Me</h2><p>Outside of coursework, I enjoy exploring new technology, developing practical skills, and taking on projects that help me learn by doing.</p></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span class="footer-rule"></span><p>© 2026 Anthony Ramos</p><span class="footer-rule"></span></div></footer>
+  <script src="script.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact | Anthony Ramos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="background-art" aria-hidden="true"></div>
+  <header class="site-header">
+    <nav class="container nav-bar" aria-label="Main navigation">
+      <a class="brand" href="index.html"><img class="brand-bobcat" src="images/TXST_Bobcat_logo.png" alt=""> Anthony Ramos</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a><a href="project.html">Projects</a>
+        <a class="active" href="contact.html">Contact</a><a href="about-me.html">About Me</a>
+      </div>
+      <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false">Toggle dark mode</button>
+    </nav>
+  </header>
+  <main class="container page-main contact-main">
+    <section class="page-intro motion-item">
+      <h1>Let's Connect</h1>
+      <p>Have a question about my coursework, projects, or professional interests? Send me a message using the form below.</p>
+    </section>
+    <form class="contact-form contact-native motion-item" id="contact-form" novalidate>
+      <div class="form-field">
+        <label for="contact-name">Name</label>
+        <input id="contact-name" name="name" type="text" autocomplete="name" required>
+        <p class="field-message" id="name-message" aria-live="polite"></p>
+      </div>
+      <div class="form-field">
+        <label for="contact-email">Email address</label>
+        <input id="contact-email" name="email" type="email" autocomplete="email" required>
+        <p class="field-message" id="email-message" aria-live="polite"></p>
+      </div>
+      <div class="form-field">
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" rows="6" required></textarea>
+        <p class="field-hint">Please enter at least 20 characters.</p>
+        <p class="field-message" id="message-feedback" aria-live="polite"></p>
+      </div>
+      <button class="submit-button" type="submit">Send message</button>
+      <p class="form-result" id="form-result" role="status" aria-live="polite"></p>
+      <p class="form-disclaimer">This demonstration form validates your message in the browser; it does not send or store personal information.</p>
+    </form>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><span class="footer-rule"></span><p>© 2026 Anthony Ramos</p><span class="footer-rule"></span></div></footer>
+  <script src="script.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anthony Ramos | Home</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="background-art" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <nav class="container nav-bar" aria-label="Main navigation">
+      <a class="brand" href="index.html"><img class="brand-bobcat" src="images/TXST_Bobcat_logo.png" alt=""> Anthony Ramos</a>
+      <div class="nav-links">
+        <a class="active" href="index.html">Home</a>
+        <a href="project.html">Projects</a>
+        <a href="contact.html">Contact</a>
+        <a href="about-me.html">About Me</a>
+      </div>
+      <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false">Toggle dark mode</button>
+    </nav>
+  </header>
+
+  <main class="container home-main">
+    <section class="hero">
+      <div class="hero-logo-wrap motion-item">
+        <div class="logo-ring">
+          <img class="txst-logo hero-headshot" src="images/anthony-headshot.jpeg" alt="Professional headshot of Anthony Ramos">
+          <img class="txst-medallion" src="images/TXST_LOGO.jpg" alt="Texas State University logo">
+        </div>
+      </div>
+
+      <div class="hero-copy motion-item">
+        <h1>Anthony Ramos</h1>
+        <p id="intro">I am a Computer Information Systems student at Texas State University and a U.S. Army veteran with experience supporting enterprise IT environments. I enjoy solving technical problems, learning new technologies, and building reliable systems. I am pursuing opportunities in IT infrastructure, systems administration, and tactical systems support.</p>
+        <div class="bobcat-divider" aria-hidden="true"><span></span><img class="bobcat-mark" src="images/TXST_Bobcat_logo.png" alt=""><span></span></div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="section-heading motion-item">
+        <p class="eyebrow">A QUICK INTRODUCTION</p>
+        <h2>Three Things About Me</h2>
+      </div>
+      <div class="cards">
+        <article class="card motion-item">
+          <span class="card-icon" aria-hidden="true">▱</span>
+          <h3>My Major</h3>
+          <p>Computer Information Systems, where I study to bridge business and technology.</p>
+        </article>
+        <article class="card motion-item">
+          <span class="card-icon" aria-hidden="true">✧</span>
+          <h3>For Fun</h3>
+          <p>Learning new technology, building practical IT skills, and building with teams.</p>
+        </article>
+        <article class="card motion-item">
+          <span class="card-icon" aria-hidden="true">↗</span>
+          <h3>My Goal</h3>
+          <p>Graduate and grow into an Infrastructure Generalist or Tactical Systems Administrator position.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="home-bottom">
+      <div class="skills-home motion-item">
+        <div class="section-heading">
+          <p class="eyebrow">WHAT I'M BUILDING ON</p>
+          <h2>My Skills</h2>
+        </div>
+        <table>
+          <tr><th>Skill</th><th>Level</th></tr>
+          <tr><td>IT Support</td><td>Experienced</td></tr>
+          <tr><td>Leadership</td><td>Experienced</td></tr>
+          <tr><td>Networking</td><td>Developing</td></tr>
+          <tr><td>HTML, CSS, Flexbox and Grid</td><td>Learning and practicing</td></tr>
+        </table>
+      </div>
+
+      <div class="reference-home motion-item">
+        <div class="section-heading">
+          <p class="eyebrow">EXPLORE</p>
+          <h2>Reference Links</h2>
+        </div>
+        <a class="reference-link" href="https://www.txst.edu" target="_blank" rel="noopener">
+          <span class="reference-icon">▤</span><span>Texas State University</span><span class="external-mark">↗</span>
+        </a>
+        <a class="reference-link" href="https://www.youtube.com" target="_blank" rel="noopener">
+          <span class="reference-icon">▷</span><span>YouTube</span><span class="external-mark">↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="footer-rule"></span>
+      <p>© 2026 Anthony Ramos</p>
+      <span class="footer-rule"></span>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+
+  <!--
+   Assignment 7:
+   1. The design principle I fixed, and what I changed: I improved visual hierarchy by making my profile, career goals, and project showcase easier to identify. I also used consistent spacing, colors, and navigation across all pages.
+   2. The tools and AI I used: Visual Studio Code, HTML, CSS, JavaScript, and ChatGPT.
+  -->
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects | Anthony Ramos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="background-art" aria-hidden="true"></div>
+  <header class="site-header">
+    <nav class="container nav-bar" aria-label="Main navigation">
+      <a class="brand" href="index.html"><img class="brand-bobcat" src="images/TXST_Bobcat_logo.png" alt=""> Anthony Ramos</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a><a class="active" href="project.html">Projects</a>
+        <a href="contact.html">Contact</a><a href="about-me.html">About Me</a>
+      </div>
+      <button class="theme-toggle" type="button" id="theme-toggle" aria-pressed="false">Toggle dark mode</button>
+    </nav>
+  </header>
+
+  <main class="container page-main">
+    <section class="page-intro motion-item">
+      <h1>Projects</h1>
+      <p>Programming and application projects that demonstrate my interest in artificial intelligence, software development, and practical problem-solving.</p>
+    </section>
+
+    <section class="gallery showcase-gallery" aria-label="Project showcase">
+      <article class="card project-card motion-item">
+        <img class="project-image" src="images/project-portfolio.svg" alt="Arcade-style racing game illustration representing Pole Position">
+        <p class="card-kicker">01 / PYTHON · ARTIFICIAL INTELLIGENCE</p>
+        <h2>Pole Position</h2>
+        <p>An AI game based off the Atari game "Pole Position." The purpose of the project is to test Gemini's capabilities to replicate older games.</p>
+        <a class="project-link" href="projects/Pole_Position_Gemini_Game.py" download="Pole_Position_Gemini_Game.py">Download Python source <span aria-hidden="true">↓</span></a>
+      </article>
+
+      <article class="card project-card motion-item">
+        <img class="project-image" src="images/project-skills.svg" alt="Illustration representing a Python programming project">
+        <p class="card-kicker">02 / PYTHON · ARTIFICIAL INTELLIGENCE</p>
+        <h2>Craps</h2>
+        <p>A group project completed through Python. The purpose was to test my group's knowledge of basic Python coding skills, and we recreated the game Craps as the result of the project.</p>
+        <a class="project-link" href="projects/Craps_Project.py" download="Craps_Project.py">Download Python source <span aria-hidden="true">↓</span></a>
+      </article>
+
+      <article class="card project-card motion-item">
+        <img class="project-image" src="images/project-theme.svg" alt="Illustration representing a maroon and gold fitness application interface">
+        <p class="card-kicker">03 / CURRENT PROJECT · LLM APPLICATION</p>
+        <h2>Flex</h2>
+        <p>This is my current project. Egor and I are developing our own fitness app using large language models (LLMs) and raw data. The goal is to understand how a front-end application works with an LLM providing back-end support. We plan to use Google AI Studio and Google Cloud Console to build the app.</p>
+        <a class="project-link" href="projects/Flex_Project_Proposal.docx" download="Flex_Project_Proposal.docx">Download project proposal <span aria-hidden="true">↓</span></a>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-inner"><span class="footer-rule"></span><p>© 2026 Anthony Ramos</p><span class="footer-rule"></span></div></footer>
+  <script src="script.js"></script>
+</body>
+</html>
