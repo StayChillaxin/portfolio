@@ -1,0 +1,1 @@
+PROJECT DOWNLOADS\n\nPole_Position_Gemini_Game.py: Python/Pygame arcade racing game based on Pole Position.\nCraps_Project.py: Python group project recreating the game Craps.\nFlex_Project_Proposal.docx: Project proposal for the AI-powered personalized workout assistant.\n\nUse the download links on project.html to access these files.\n
